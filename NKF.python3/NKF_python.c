@@ -112,7 +112,7 @@ pynkf_convert(unsigned char* str, int strlen, char* opts, int optslen)
 
     reinit();
 
-    options(opts);
+    options((unsigned char*)opts);
 
     kanji_convert(NULL);
 
@@ -123,7 +123,7 @@ pynkf_convert(unsigned char* str, int strlen, char* opts, int optslen)
   }
 
   *pynkf_optr = 0;
-  res = PyBytes_FromString(pynkf_outbuf);
+  res = PyBytes_FromString((const char*)pynkf_outbuf);
   PyMem_Free(pynkf_outbuf);
   return res;
 }

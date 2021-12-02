@@ -112,7 +112,7 @@ pynkf_convert(unsigned char* str, int strlen, char* opts, int optslen)
 
     reinit();
 
-    options(opts);
+    options((unsigned char*)opts);
 
     kanji_convert(NULL);
 
@@ -123,7 +123,7 @@ pynkf_convert(unsigned char* str, int strlen, char* opts, int optslen)
   }
 
   *pynkf_optr = 0;
-  res = PyString_FromString(pynkf_outbuf);
+  res = PyString_FromString((const char*)pynkf_outbuf);
   PyMem_Free(pynkf_outbuf);
   return res;
 }
@@ -147,7 +147,7 @@ pynkf_convert_guess(unsigned char* str, int strlen)
 
   codename = get_guessed_code();
 
-  res = PyString_FromString(codename);
+  res = PyString_FromString((const char*)codename);
   return res;
 }
 

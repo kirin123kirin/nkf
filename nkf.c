@@ -1028,7 +1028,7 @@ get_backup_filename(const char *suffix, const char *filename)
     }
 
     if(asterisk_count){
-	backup_filename = nkf_xmalloc(strlen(suffix) + (asterisk_count * (filename_length - 1)) + 1);
+	backup_filename = (char*)nkf_xmalloc(strlen(suffix) + (asterisk_count * (filename_length - 1)) + 1);
 	for(i = 0, j = 0; suffix[i];){
 	    if(suffix[i] == '*'){
 		backup_filename[j] = '\0';
@@ -1042,7 +1042,7 @@ get_backup_filename(const char *suffix, const char *filename)
 	backup_filename[j] = '\0';
     }else{
 	j = filename_length + strlen(suffix);
-	backup_filename = nkf_xmalloc(j + 1);
+	backup_filename = (char*)nkf_xmalloc(j + 1);
 	strcpy(backup_filename, filename);
 	strcat(backup_filename, suffix);
 	backup_filename[j] = '\0';
@@ -5512,9 +5512,9 @@ nkf_iconv_new(char *tocode, char *fromcode)
     nkf_iconv_t converter;
 
     converter->input_buffer_size = IOBUF_SIZE;
-    converter->input_buffer = nkf_xmalloc(converter->input_buffer_size);
+    converter->input_buffer = (char*)nkf_xmalloc(converter->input_buffer_size);
     converter->output_buffer_size = IOBUF_SIZE * 2;
-    converter->output_buffer = nkf_xmalloc(converter->output_buffer_size);
+    converter->output_buffer = (char*)nkf_xmalloc(converter->output_buffer_size);
     converter->cd = iconv_open(tocode, fromcode);
     if (converter->cd == (iconv_t)-1)
     {
@@ -7054,7 +7054,7 @@ main(int argc, char **argv)
 		if (file_out_f == TRUE) {
 #ifdef OVERWRITE
 		    if (overwrite_f){
-			outfname = nkf_xmalloc(strlen(origfname)
+			outfname = (char*)nkf_xmalloc(strlen(origfname)
 					  + strlen(".nkftmpXXXXXX")
 					  + 1);
 			strcpy(outfname, origfname);
@@ -7071,15 +7071,15 @@ main(int argc, char **argv)
 			}
 			strcat(outfname, "ntXXXXXX");
 			mktemp(outfname);
-			fd = open(outfname, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL,
-				  S_IREAD | S_IWRITE);
+			fd = _open(outfname, _O_WRONLY | _O_CREAT | _O_TRUNC | _O_EXCL,
+				  _S_IREAD | _S_IWRITE);
 #else
 			strcat(outfname, ".nkftmpXXXXXX");
 			fd = mkstemp(outfname);
 #endif
 			if (fd < 0
-			    || (fd_backup = dup(fileno(stdout))) < 0
-			    || dup2(fd, fileno(stdout)) < 0
+			    || (fd_backup = _dup(_fileno(stdout))) < 0
+			    || _dup2(fd, _fileno(stdout)) < 0
 			   ){
 			    perror(origfname);
 			    return -1;
@@ -7125,27 +7125,27 @@ main(int argc, char **argv)
 		fclose(fin);
 #ifdef OVERWRITE
 		if (overwrite_f) {
-		    struct stat     sb;
+		    struct _stat     sb;
 #if defined(MSDOS) && !defined(__MINGW32__) && !defined(__WIN32__) && !defined(__WATCOMC__) && !defined(__EMX__) && !defined(__OS2__) && !defined(__DJGPP__)
 		    time_t tb[2];
 #else
-		    struct utimbuf  tb;
+		    struct _utimbuf  tb;
 #endif
 
 		    fflush(stdout);
-		    close(fd);
-		    if (dup2(fd_backup, fileno(stdout)) < 0){
+		    _close(fd);
+		    if (_dup2(fd_backup, _fileno(stdout)) < 0){
 			perror("dup2");
 		    }
-		    if (stat(origfname, &sb)) {
+		    if (_stat(origfname, &sb)) {
 			fprintf(stderr, "Can't stat %s\n", origfname);
 		    }
-		    /* パーミッションを復元 */
-		    if (chmod(outfname, sb.st_mode)) {
+		    /* $B%Q!<%_%C%7%g%s$rI|85(B */
+		    if (_chmod(outfname, sb.st_mode)) {
 			fprintf(stderr, "Can't set permission %s\n", outfname);
 		    }
 
-		    /* タイムスタンプを復元 */
+		    /* $B%?%$%`%9%?%s%W$rI|85(B */
 		    if(preserve_time_f){
 #if defined(MSDOS) && !defined(__MINGW32__) && !defined(__WIN32__) && !defined(__WATCOMC__) && !defined(__EMX__) && !defined(__OS2__) && !defined(__DJGPP__)
 			tb[0] = tb[1] = sb.st_mtime;
@@ -7155,7 +7155,7 @@ main(int argc, char **argv)
 #else
 			tb.actime  = sb.st_atime;
 			tb.modtime = sb.st_mtime;
-			if (utime(outfname, &tb)) {
+			if (_utime(outfname, &tb)) {
 			    fprintf(stderr, "Can't set timestamp %s\n", outfname);
 			}
 #endif
@@ -7163,7 +7163,7 @@ main(int argc, char **argv)
 		    if(backup_f){
 			char *backup_filename = get_backup_filename(backup_suffix, origfname);
 #ifdef MSDOS
-			unlink(backup_filename);
+			_unlink(backup_filename);
 #endif
 			if (rename(origfname, backup_filename)) {
 			    perror(backup_filename);
@@ -7173,7 +7173,7 @@ main(int argc, char **argv)
 			nkf_xfree(backup_filename);
 		    }else{
 #ifdef MSDOS
-			if (unlink(origfname)){
+			if (_unlink(origfname)){
 			    perror(origfname);
 			}
 #endif
