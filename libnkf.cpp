@@ -92,6 +92,10 @@ static void nkf_putchar(int c) {
 #include "nkf.c"
 #include "utf8tbl.c"
 
+/* 
+  opts : below reference
+    https://github.com/kirin123kirin/nkf#options
+ */
 std::string nkf_convert(std::string& str, std::string& opts) {
     nkf_ibufsize = str.size() + 1;
     nkf_obufsize = nkf_ibufsize * 1.5 + 256;
