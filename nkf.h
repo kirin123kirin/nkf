@@ -79,7 +79,7 @@ void  setbinmode(FILE *fp)
     __file_handle_set(fd, m);
 }
 #else /* Microsoft C, Turbo C */
-#define setbinmode(fp) _setmode(_fileno(fp), _O_BINARY)
+#define setbinmode(fp) setmode(fileno(fp), O_BINARY)
 #endif
 #else /* UNIX */
 #define setbinmode(fp) (void)(fp)
@@ -181,8 +181,6 @@ void  setbinmode(FILE *fp)
 #  define ARG_UNUSED
 #endif
 #endif
-
-static const char* get_guessed_code(void);
 
 #ifdef WIN32DLL
 #include "nkf32.h"

@@ -7071,15 +7071,15 @@ main(int argc, char **argv)
 			}
 			strcat(outfname, "ntXXXXXX");
 			mktemp(outfname);
-			fd = _open(outfname, _O_WRONLY | _O_CREAT | _O_TRUNC | _O_EXCL,
-				  _S_IREAD | _S_IWRITE);
+			fd = open(outfname, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL,
+				  S_IREAD | S_IWRITE);
 #else
 			strcat(outfname, ".nkftmpXXXXXX");
 			fd = mkstemp(outfname);
 #endif
 			if (fd < 0
-			    || (fd_backup = _dup(_fileno(stdout))) < 0
-			    || _dup2(fd, _fileno(stdout)) < 0
+			    || (fd_backup = dup(fileno(stdout))) < 0
+			    || dup2(fd, fileno(stdout)) < 0
 			   ){
 			    perror(origfname);
 			    return -1;
@@ -7125,27 +7125,27 @@ main(int argc, char **argv)
 		fclose(fin);
 #ifdef OVERWRITE
 		if (overwrite_f) {
-		    struct _stat     sb;
+		    struct stat     sb;
 #if defined(MSDOS) && !defined(__MINGW32__) && !defined(__WIN32__) && !defined(__WATCOMC__) && !defined(__EMX__) && !defined(__OS2__) && !defined(__DJGPP__)
 		    time_t tb[2];
 #else
-		    struct _utimbuf  tb;
+		    struct utimbuf  tb;
 #endif
 
 		    fflush(stdout);
-		    _close(fd);
-		    if (_dup2(fd_backup, _fileno(stdout)) < 0){
+		    close(fd);
+		    if (dup2(fd_backup, fileno(stdout)) < 0){
 			perror("dup2");
 		    }
-		    if (_stat(origfname, &sb)) {
+		    if (stat(origfname, &sb)) {
 			fprintf(stderr, "Can't stat %s\n", origfname);
 		    }
-		    /* $B%Q!<%_%C%7%g%s$rI|85(B */
-		    if (_chmod(outfname, sb.st_mode)) {
+		    /* パーミッションを復元 */
+		    if (chmod(outfname, sb.st_mode)) {
 			fprintf(stderr, "Can't set permission %s\n", outfname);
 		    }
 
-		    /* $B%?%$%`%9%?%s%W$rI|85(B */
+		    /* タイムスタンプを復元 */
 		    if(preserve_time_f){
 #if defined(MSDOS) && !defined(__MINGW32__) && !defined(__WIN32__) && !defined(__WATCOMC__) && !defined(__EMX__) && !defined(__OS2__) && !defined(__DJGPP__)
 			tb[0] = tb[1] = sb.st_mtime;
@@ -7155,7 +7155,7 @@ main(int argc, char **argv)
 #else
 			tb.actime  = sb.st_atime;
 			tb.modtime = sb.st_mtime;
-			if (_utime(outfname, &tb)) {
+			if (utime(outfname, &tb)) {
 			    fprintf(stderr, "Can't set timestamp %s\n", outfname);
 			}
 #endif
@@ -7163,7 +7163,7 @@ main(int argc, char **argv)
 		    if(backup_f){
 			char *backup_filename = get_backup_filename(backup_suffix, origfname);
 #ifdef MSDOS
-			_unlink(backup_filename);
+			unlink(backup_filename);
 #endif
 			if (rename(origfname, backup_filename)) {
 			    perror(backup_filename);
@@ -7173,7 +7173,7 @@ main(int argc, char **argv)
 			nkf_xfree(backup_filename);
 		    }else{
 #ifdef MSDOS
-			if (_unlink(origfname)){
+			if (unlink(origfname)){
 			    perror(origfname);
 			}
 #endif
