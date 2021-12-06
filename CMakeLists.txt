@@ -7,26 +7,26 @@ add_executable(nkf
     ${CMAKE_CURRENT_SOURCE_DIR}/utf8tbl.c
 )
 
-add_library(nkf32 SHARED
+add_library(libnkf SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/nkf32.c
     ${CMAKE_CURRENT_SOURCE_DIR}/utf8tbl.c
 )
 
-add_library(nkf32static STATIC
+add_library(libnkf_static STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/nkf32.c
     ${CMAKE_CURRENT_SOURCE_DIR}/utf8tbl.c
 )
 
 install(
-    TARGETS nkf nkf32static
+    TARGETS nkf libnkf_static
     RUNTIME    DESTINATION bin
     LIBRARY    DESTINATION lib
 )
 
 install(
-    TARGETS nkf32
+    TARGETS libnkf
     RUNTIME    DESTINATION lib ## for windows dll
     LIBRARY    DESTINATION lib
 )
