@@ -38,36 +38,36 @@ To accept X0201 in Shift_JIS, use __-X__, __-x__ or __-S__.
 Specify input and output encodings. Upper case is input.
 cf. --ic and --oc.
 
-    - __-J__
+- __-J__
 
-    ISO-2022-JP (JIS code).
+ISO-2022-JP (JIS code).
 
-    - __-S__
+- __-S__
 
-    Shift_JIS and JIS X 0201 kana.
-    EUC-JP is recognized as X0201 kana. Without __-x__ flag,
-    JIS X 0201 Katakana (a.k.a.halfwidth kana) is converted into JIS X 0208.
-    If you use Windows, see Windows-31J (CP932).
+Shift_JIS and JIS X 0201 kana.
+EUC-JP is recognized as X0201 kana. Without __-x__ flag,
+JIS X 0201 Katakana (a.k.a.halfwidth kana) is converted into JIS X 0208.
+If you use Windows, see Windows-31J (CP932).
 
-    - __-E__
+- __-E__
 
-    EUC-JP.
+EUC-JP.
 
-    - __-W__
+- __-W__
 
-    UTF-8N.
+UTF-8N.
 
-    - __-W16[BL][0]__
+- __-W16[BL][0]__
 
-    UTF-16.
-    B or L gives whether Big Endian or Little Endian.
-    0 gives whether put BOM or not.
+UTF-16.
+B or L gives whether Big Endian or Little Endian.
+0 gives whether put BOM or not.
 
-    - __-W32[BL][0]__
+- __-W32[BL][0]__
 
-    UTF-32.
-    B or L gives whether Big Endian or Little Endian.
-    0 gives whether put BOM or not.
+UTF-32.
+B or L gives whether Big Endian or Little Endian.
+0 gives whether put BOM or not.
 
 - __-b -u__
 
@@ -81,13 +81,13 @@ No conversion.
 
 Specify the escape sequence for JIS X 0208.
 
-    - __-i@__
+- __-i@__
 
-    Use ESC ( @. (JIS X 0208-1978)
+Use ESC ( @. (JIS X 0208-1978)
 
-    - __-iB__
+- __-iB__
 
-    Use ESC ( B. (JIS X 0208-1983/1990 DEFAULT)
+Use ESC ( B. (JIS X 0208-1983/1990 DEFAULT)
 
 - __-o[BJ]__
 
@@ -97,18 +97,18 @@ Specify the escape sequence for US-ASCII/JIS X 0201 Roman. (DEFAULT B)
 
 {de/en}crypt ROT13/47
 
-    - __-h[123] --hiragana --katakana --katakana-hiragana__
-    - __-h1 --hiragana__
+- __-h[123] --hiragana --katakana --katakana-hiragana__
+- __-h1 --hiragana__
 
-    Katakana to Hiragana conversion.
+Katakana to Hiragana conversion.
 
-    - __-h2 --katakana__
+- __-h2 --katakana__
 
-    Hiragana to Katakana conversion.
+Hiragana to Katakana conversion.
 
-    - __-h3 --katakana-hiragana__
+- __-h3 --katakana-hiragana__
 
-    Katakana to Hiragana and Hiragana to Katakana conversion.
+Katakana to Hiragana and Hiragana to Katakana conversion.
 
 - __-T__
 
@@ -127,21 +127,21 @@ New line preserving line folding.
 
 Convert X0208 alphabet (Fullwidth Alphabets) to ASCII.
 
-    - __-Z -Z0__
+- __-Z -Z0__
 
-    Convert X0208 alphabet to ASCII.
+Convert X0208 alphabet to ASCII.
 
-    - __-Z1__
+- __-Z1__
 
-    Convert X0208 kankaku to single ASCII space.
+Convert X0208 kankaku to single ASCII space.
 
-    - __-Z2__
+- __-Z2__
 
-    Convert X0208 kankaku to double ASCII spaces.
+Convert X0208 kankaku to double ASCII spaces.
 
-    - __-Z3__
+- __-Z3__
 
-    Replacing fullwidth >, <, ", & into '&gt;', '&lt;', '&quot;', '&amp;' as in HTML.
+Replacing fullwidth >, <, ", & into '&gt;', '&lt;', '&quot;', '&amp;' as in HTML.
 
 - __-X -x__
 
@@ -154,13 +154,13 @@ In JIS output, ESC-(-I is used. In EUC output, SS2 is used.
 Assume broken JIS-Kanji input, which lost ESC.
 Useful when your site is using old B-News Nihongo patch.
 
-    - __-B1__
+- __-B1__
 
-    allows any chars after ESC-( or ESC-$.
+allows any chars after ESC-( or ESC-$.
 
-    - __-B2__
+- __-B2__
 
-    force ASCII after NL.
+force ASCII after NL.
 
 - __-I__
 
@@ -172,36 +172,36 @@ Replacing non iso-2022-jp char into a geta character
 MIME ISO-2022-JP/ISO8859-1 decode. (DEFAULT)
 To see ISO8859-1 (Latin-1) -l is necessary.
 
-    - __-mB__
+- __-mB__
 
-    Decode MIME base64 encoded stream. Remove header or other part before
-    conversion. 
+Decode MIME base64 encoded stream. Remove header or other part before
+conversion. 
 
-    - __-mQ__
+- __-mQ__
 
-    Decode MIME quoted stream. '_' in quoted stream is converted to space.
+Decode MIME quoted stream. '_' in quoted stream is converted to space.
 
-    - __-mN__
+- __-mN__
 
-    Non-strict decoding.
-    It allows line break in the middle of the base64 encoding.
+Non-strict decoding.
+It allows line break in the middle of the base64 encoding.
 
-    - __-m0__
+- __-m0__
 
-    No MIME decode.
+No MIME decode.
 
 - __-M__
 
 MIME encode. Header style. All ASCII code and control characters are intact.
 
-    - __-MB__
+- __-MB__
 
-    MIME encode Base64 stream.
-    Kanji conversion is performed before encoding, so this cannot be used as a picture encoder.
+MIME encode Base64 stream.
+Kanji conversion is performed before encoding, so this cannot be used as a picture encoder.
 
-    - __-MQ__
+- __-MQ__
 
-    Perform quoted encoding.
+Perform quoted encoding.
 
 - __-l__
 
@@ -212,19 +212,19 @@ __-s__, __-e__ and __-x__ are not compatible with this option.
 
 Convert line breaks.
 
-    - __-Lu -d__
+- __-Lu -d__
 
-    unix (LF)
+unix (LF)
 
-    - __-Lw -c__
+- __-Lw -c__
 
-    windows (CRLF)
+windows (CRLF)
 
-    - __-Lm__
+- __-Lm__
 
-    mac (CR)
+mac (CR)
 
-    Without this option, nkf doesn't convert line breaks.
+Without this option, nkf doesn't convert line breaks.
 
 - __--fj --unix --mac --msdos --windows__
 
@@ -243,83 +243,83 @@ Assume input system
 Set the input or output codeset.
 NKF supports following codesets and those codeset names are case insensitive.
 
-    - ISO-2022-JP
+- ISO-2022-JP
 
-    a.k.a. RFC1468, 7bit JIS, JUNET
+a.k.a. RFC1468, 7bit JIS, JUNET
 
-    - EUC-JP (eucJP-nkf)
+- EUC-JP (eucJP-nkf)
 
-    a.k.a. AT&T JIS, Japanese EUC, UJIS
+a.k.a. AT&T JIS, Japanese EUC, UJIS
 
-            - eucJP-ascii
-        - eucJP-ms
-    - CP51932
+- eucJP-ascii
+- eucJP-ms
+- CP51932
 
-    Microsoft Version of EUC-JP.
+Microsoft Version of EUC-JP.
 
-    - Shift_JIS
+- Shift_JIS
 
-    a.k.a. SJIS, MS_Kanji
+a.k.a. SJIS, MS_Kanji
 
-    - Windows-31J
+- Windows-31J
 
-    a.k.a. CP932
+a.k.a. CP932
 
-    - UTF-8
+- UTF-8
 
-    same as UTF-8N
+same as UTF-8N
 
-    - UTF-8N
+- UTF-8N
 
-    UTF-8 without BOM
+UTF-8 without BOM
 
-    - UTF-8-BOM
+- UTF-8-BOM
 
-    UTF-8 with BOM
+UTF-8 with BOM
 
-    - UTF8-MAC (input only)
+- UTF8-MAC (input only)
 
-    decomposed UTF-8
+decomposed UTF-8
 
-    - UTF-16
+- UTF-16
 
-    same as UTF-16BE
+same as UTF-16BE
 
-    - UTF-16BE
+- UTF-16BE
 
-    UTF-16 Big Endian without BOM
+UTF-16 Big Endian without BOM
 
-    - UTF-16BE-BOM
+- UTF-16BE-BOM
 
-    UTF-16 Big Endian with BOM
+UTF-16 Big Endian with BOM
 
-    - UTF-16LE
+- UTF-16LE
 
-    UTF-16 Little Endian without BOM
+UTF-16 Little Endian without BOM
 
-    - UTF-16LE-BOM
+- UTF-16LE-BOM
 
-    UTF-16 Little Endian with BOM
+UTF-16 Little Endian with BOM
 
-    - UTF-32
+- UTF-32
 
-    same as UTF-32BE
+same as UTF-32BE
 
-    - UTF-32BE
+- UTF-32BE
 
-    UTF-32 Big Endian without BOM
+UTF-32 Big Endian without BOM
 
-    - UTF-32BE-BOM
+- UTF-32BE-BOM
 
-    UTF-32 Big Endian with BOM
+UTF-32 Big Endian with BOM
 
-    - UTF-32LE
+- UTF-32LE
 
-    UTF-32 Little Endian without BOM
+UTF-32 Little Endian without BOM
 
-    - UTF-32LE-BOM
+- UTF-32LE-BOM
 
-    UTF-32 Little Endian with BOM
+UTF-32 Little Endian with BOM
 
 - __--fb-{skip, html, xml, perl, java, subchar}__
 
