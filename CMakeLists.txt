@@ -30,5 +30,5 @@ install(
 install(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.h
-    DESTINATION lib
+    DESTINATION include
 )
