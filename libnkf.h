@@ -28,14 +28,14 @@ Changes.
 
 #include <string>
 
-std::string nkf_convert(std::string& str, std::string& opts);
+extern std::string nkf_convert(std::string& str, std::string& opts);
 
-std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts);
+extern std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts);
 
-static const char* nkf_guess(std::string& str);
+extern const char* nkf_guess(std::string& str);
 
-static const char* guess_encoding(const std::string& str);
+extern const char* guess_encoding(const std::string& str);
 
-static const char* guess_encoding(unsigned char* str, int strlen);
+extern const char* guess_encoding(unsigned char* str, int strlen);
 
 #endif /* LIBNKF_H */

@@ -95,7 +95,7 @@ static void nkf_putchar(int c) {
   opts : below reference
     https://github.com/kirin123kirin/nkf#options
  */
-std::string nkf_convert(std::string& str, std::string& opts) {
+extern std::string nkf_convert(std::string& str, std::string& opts) {
     nkf_ibufsize = str.size() + 1;
     nkf_obufsize = nkf_ibufsize * 1.5 + 256;
     nkf_outbuf = (unsigned char*)malloc(nkf_obufsize);
@@ -127,7 +127,7 @@ std::string nkf_convert(std::string& str, std::string& opts) {
     free(nkf_outbuf);
     return res;
 }
-std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts) {
+extern std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts) {
     nkf_ibufsize = strlen + 1;
     nkf_obufsize = nkf_ibufsize * 1.5 + 256;
     nkf_outbuf = (unsigned char*)malloc(nkf_obufsize);
@@ -159,7 +159,7 @@ std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts) {
     return res;
 }
 
-static const char* nkf_guess(std::string& str) {
+extern const char* nkf_guess(std::string& str) {
     const char* codename;
 
     nkf_ibufsize = str.size() + 1;
@@ -178,7 +178,7 @@ static const char* nkf_guess(std::string& str) {
     return get_guessed_code();
 }
 
-static const char* guess_encoding(const std::string& str) {
+extern const char* guess_encoding(const std::string& str) {
     nkf_ibufsize = str.size() + 1;
     nkf_icount = 0;
     nkf_inbuf = (unsigned char*)str.data();
@@ -216,7 +216,7 @@ static const char* guess_encoding(const std::string& str) {
     return input_codename;
 }
 
-static const char* guess_encoding(unsigned char* str, int strlen) {
+extern const char* guess_encoding(unsigned char* str, int strlen) {
     nkf_ibufsize = strlen + 1;
     nkf_icount = 0;
     nkf_inbuf = nkf_iptr = str;
