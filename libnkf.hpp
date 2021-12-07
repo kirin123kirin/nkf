@@ -23,10 +23,12 @@ Changes.
 **    You don't have to ask before copying, redistribution or publishing.
 **    THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE.
 ***************************************************************************/
+#ifndef LIBNKF_H
+#define LIBNKF_H
 
-#include "libnkf.h"
 #include <setjmp.h>
 #include <stdio.h>
+#include <string>
 
 #undef getc
 #undef ungetc
@@ -128,8 +130,39 @@ std::string nkf_convert(std::string& str, std::string& opts) {
     free(nkf_outbuf);
     return res;
 }
+std::string nkf_convert(unsigned char* str, int strlen, unsigned char* opts) {
+    nkf_ibufsize = strlen + 1;
+    nkf_obufsize = nkf_ibufsize * 1.5 + 256;
+    nkf_outbuf = (unsigned char*)malloc(nkf_obufsize);
+    if(nkf_outbuf == NULL) {
+        return NULL;
+    }
+    nkf_outbuf[0] = '\0';
+    nkf_ocount = nkf_obufsize;
+    nkf_optr = nkf_outbuf;
+    nkf_icount = 0;
+    nkf_inbuf = nkf_iptr = str;
+    nkf_guess_flag = 0;
 
-static std::string nkf_convert_guess(std::string& str) {
+    if(setjmp(env) == 0) {
+        reinit();
+
+        options(opts);
+
+        kanji_convert(NULL);
+
+    } else {
+        free(nkf_outbuf);
+        return NULL;
+    }
+
+    *nkf_optr = 0;
+    std::string res((const char*)nkf_outbuf);
+    free(nkf_outbuf);
+    return res;
+}
+
+static const char* nkf_guess(std::string& str) {
     const char* codename;
 
     nkf_ibufsize = str.size() + 1;
@@ -147,3 +180,80 @@ static std::string nkf_convert_guess(std::string& str) {
 
     return get_guessed_code();
 }
+
+static const char* guess_encoding(const std::string& str) {
+    nkf_ibufsize = str.size() + 1;
+    nkf_icount = 0;
+    nkf_inbuf = (unsigned char*)str.data();
+    nkf_iptr = nkf_inbuf;
+
+    nkf_guess_flag = 1;
+    reinit();
+    guess_f = 1;
+
+    kanji_convert(NULL);
+
+    struct input_code* p = find_inputcode_byfunc(iconv);
+
+    if(input_codename && !*input_codename) {
+        return NULL;
+    } else if(!input_codename) {
+        return "ascii";
+    } else if(strcmp(input_codename, "Shift_JIS") == 0) {
+        return "cp932";
+    } else if(strcmp(input_codename, "EUC-JP") == 0) {
+        if(p->score & SCORE_X0213)
+            return "euc_jis_2004";  // EUC-JIS-2004
+        else if(p->score & (SCORE_X0212))
+            return "euc_jp";  // EUCJP-MS
+        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
+            return "euc_jp";  // CP51932
+        return "euc_jp";      // CP51932
+    } else if(strcmp(input_codename, "ISO-2022-JP") == 0) {
+        if(p->score & (SCORE_KANA))
+            return "iso2022_jp_1";  // CP50221
+        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
+            return "iso2022_jp";  // CP50220
+        return "iso2022_jp";      // CP50220
+    }
+    return input_codename;
+}
+
+static const char* guess_encoding(unsigned char* str, int strlen) {
+    nkf_ibufsize = strlen + 1;
+    nkf_icount = 0;
+    nkf_inbuf = nkf_iptr = str;
+
+    nkf_guess_flag = 1;
+    reinit();
+    guess_f = 1;
+
+    kanji_convert(NULL);
+
+    struct input_code* p = find_inputcode_byfunc(iconv);
+
+    if(input_codename && !*input_codename) {
+        return NULL;
+    } else if(!input_codename) {
+        return "ascii";
+    } else if(strcmp(input_codename, "Shift_JIS") == 0) {
+        return "cp932";
+    } else if(strcmp(input_codename, "EUC-JP") == 0) {
+        if(p->score & SCORE_X0213)
+            return "euc_jis_2004";  // EUC-JIS-2004
+        else if(p->score & (SCORE_X0212))
+            return "euc_jp";  // EUCJP-MS
+        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
+            return "euc_jp";  // CP51932
+        return "euc_jp";      // CP51932
+    } else if(strcmp(input_codename, "ISO-2022-JP") == 0) {
+        if(p->score & (SCORE_KANA))
+            return "iso2022_jp_1";  // CP50221
+        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
+            return "iso2022_jp";  // CP50220
+        return "iso2022_jp";      // CP50220
+    }
+    return input_codename;
+}
+
+#endif /* LIBNKF_H */
