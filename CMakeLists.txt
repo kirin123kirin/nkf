@@ -8,10 +8,12 @@ add_executable(nkf
 )
 
 add_library(libnkf SHARED
+    ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.h
     ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.cpp
 )
 
 add_library(libnkf_static STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.h
     ${CMAKE_CURRENT_SOURCE_DIR}/libnkf.cpp
 )
 
