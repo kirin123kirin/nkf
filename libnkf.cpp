@@ -23,12 +23,9 @@ Changes.
 **    You don't have to ask before copying, redistribution or publishing.
 **    THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE.
 ***************************************************************************/
-#ifndef LIBNKF_H
-#define LIBNKF_H
-
+#include "libnkf.h"
 #include <setjmp.h>
 #include <stdio.h>
-#include <string>
 
 #undef getc
 #undef ungetc
@@ -256,4 +253,3 @@ static const char* guess_encoding(unsigned char* str, int strlen) {
     return input_codename;
 }
 
-#endif /* LIBNKF_H */
