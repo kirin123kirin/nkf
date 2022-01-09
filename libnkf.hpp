@@ -26,9 +26,9 @@ Changes.
 #ifndef LIBNKF_H
 #define LIBNKF_H
 
-#include <string>
 #include <setjmp.h>
 #include <stdio.h>
+#include <string>
 
 #undef getc
 #undef ungetc
@@ -94,7 +94,7 @@ static void nkf_putchar(int c) {
 #include "nkf.c"
 #include "utf8tbl.c"
 
-/* 
+/*
   opts : below reference
     https://github.com/kirin123kirin/nkf#options
  */
@@ -181,11 +181,27 @@ extern const char* nkf_guess(std::string& str) {
     return get_guessed_code();
 }
 
-extern const char* guess_encoding(const std::string& str) {
-    nkf_ibufsize = str.size() + 1;
+extern const char* guess_encoding(unsigned char* str, int strlen, bool strict = false) {
+    nkf_ibufsize = strlen + 1;
     nkf_icount = 0;
-    nkf_inbuf = (unsigned char*)str.data();
-    nkf_iptr = nkf_inbuf;
+    nkf_inbuf = nkf_iptr = str;
+
+    if(strict == false) {
+        std::size_t i = 0;
+        for(; i < strlen; ++i) {
+            auto c = str[i];
+            if(c == '\0')
+                return NULL;
+            if(c > 127) {
+                auto after = strlen - i + 2;
+                nkf_ibufsize = after < 146 ? after : 146;
+                nkf_inbuf = nkf_iptr = str + i - 1;
+                break;
+            }
+        }
+        if(i + 1 == strlen)
+            return "ascii";
+    }
 
     nkf_guess_flag = 1;
     reinit();
@@ -219,41 +235,28 @@ extern const char* guess_encoding(const std::string& str) {
     return input_codename;
 }
 
-extern const char* guess_encoding(unsigned char* str, int strlen) {
-    nkf_ibufsize = strlen + 1;
-    nkf_icount = 0;
-    nkf_inbuf = nkf_iptr = str;
+extern const char* guess_encoding(const unsigned char* str, int strlen, bool strict = false) {
+    return guess_encoding((unsigned char*)str, strlen, strict);
+}
 
-    nkf_guess_flag = 1;
-    reinit();
-    guess_f = 1;
+extern const char* guess_encoding(char* str, int strlen, bool strict = false) {
+    return guess_encoding((unsigned char*)str, strlen, strict);
+}
 
-    kanji_convert(NULL);
+extern const char* guess_encoding(const char* str, int strlen, bool strict = false) {
+    return guess_encoding((unsigned char*)str, strlen, strict);
+}
 
-    struct input_code* p = find_inputcode_byfunc(iconv);
+extern const char* guess_encoding(const std::string& str, bool strict = false) {
+    return guess_encoding((unsigned char*)str.data(), str.size(), strict);
+}
 
-    if(input_codename && !*input_codename) {
-        return NULL;
-    } else if(!input_codename) {
-        return "ascii";
-    } else if(strcmp(input_codename, "Shift_JIS") == 0) {
-        return "cp932";
-    } else if(strcmp(input_codename, "EUC-JP") == 0) {
-        if(p->score & SCORE_X0213)
-            return "euc_jis_2004";  // EUC-JIS-2004
-        else if(p->score & (SCORE_X0212))
-            return "euc_jp";  // EUCJP-MS
-        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
-            return "euc_jp";  // CP51932
-        return "euc_jp";      // CP51932
-    } else if(strcmp(input_codename, "ISO-2022-JP") == 0) {
-        if(p->score & (SCORE_KANA))
-            return "iso2022_jp_1";  // CP50221
-        else if(p->score & (SCORE_DEPEND | SCORE_CP932))
-            return "iso2022_jp";  // CP50220
-        return "iso2022_jp";      // CP50220
-    }
-    return input_codename;
+extern const char* guess_encoding(std::string str, bool strict = false) {
+    return guess_encoding((unsigned char*)str.data(), str.size(), strict);
+}
+
+extern const char* guess_encoding(std::basic_string<unsigned char> str, bool strict = false) {
+    return guess_encoding((unsigned char*)str.data(), str.size(), strict);
 }
 
 #endif /* LIBNKF_H */
