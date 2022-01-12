@@ -214,23 +214,23 @@ extern const char* guess_encoding(unsigned char* str, int strlen, bool strict = 
     if(input_codename && !*input_codename) {
         return NULL;
     } else if(!input_codename) {
-        return "ascii";
+        return "ASCII";
     } else if(strcmp(input_codename, "Shift_JIS") == 0) {
-        return "cp932";
+        return "CP932";
     } else if(strcmp(input_codename, "EUC-JP") == 0) {
         if(p->score & SCORE_X0213)
-            return "euc_jis_2004";  // EUC-JIS-2004
+            return "EUC_JP_2004";  // EUC-JIS-2004
         else if(p->score & (SCORE_X0212))
-            return "euc_jp";  // EUCJP-MS
+            return "EUC_JP";  // EUCJP-MS
         else if(p->score & (SCORE_DEPEND | SCORE_CP932))
-            return "euc_jp";  // CP51932
-        return "euc_jp";      // CP51932
+            return "EUC_JP";  // CP51932
+        return "EUC_JP";      // CP51932
     } else if(strcmp(input_codename, "ISO-2022-JP") == 0) {
         if(p->score & (SCORE_KANA))
-            return "iso2022_jp_1";  // CP50221
+            return "ISO2022_JP_1";  // CP50221
         else if(p->score & (SCORE_DEPEND | SCORE_CP932))
-            return "iso2022_jp";  // CP50220
-        return "iso2022_jp";      // CP50220
+            return "ISO2022_JP";  // CP50220
+        return "ISO2022_JP";      // CP50220
     }
     return input_codename;
 }
