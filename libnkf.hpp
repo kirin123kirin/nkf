@@ -191,7 +191,7 @@ extern const char* guess_encoding(unsigned char* str, int strlen, bool strict = 
         for(; i < strlen; ++i) {
             auto c = str[i];
             if(c == '\0')
-                return NULL;
+                return "BINARY";
             if(c > 127) {
                 auto after = strlen - i + 2;
                 nkf_ibufsize = after < 146 ? after : 146;
@@ -200,7 +200,7 @@ extern const char* guess_encoding(unsigned char* str, int strlen, bool strict = 
             }
         }
         if(i + 1 == strlen)
-            return "ascii";
+            return "ASCII";
     }
 
     nkf_guess_flag = 1;
@@ -212,7 +212,7 @@ extern const char* guess_encoding(unsigned char* str, int strlen, bool strict = 
     struct input_code* p = find_inputcode_byfunc(iconv);
 
     if(input_codename && !*input_codename) {
-        return NULL;
+        return "BINARY";
     } else if(!input_codename) {
         return "ASCII";
     } else if(strcmp(input_codename, "Shift_JIS") == 0) {
