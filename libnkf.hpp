@@ -163,8 +163,6 @@ extern std::string nkf_convert(unsigned char* str, int strlen, unsigned char* op
 }
 
 extern const char* nkf_guess(std::string& str) {
-    const char* codename;
-
     nkf_ibufsize = str.size() + 1;
     nkf_icount = 0;
     nkf_inbuf = (unsigned char*)str.data();
@@ -175,8 +173,6 @@ extern const char* nkf_guess(std::string& str) {
     guess_f = 1;
 
     kanji_convert(NULL);
-
-    codename = get_guessed_code();
 
     return get_guessed_code();
 }
